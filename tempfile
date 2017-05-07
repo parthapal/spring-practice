@@ -1,0 +1,67 @@
+—————— jenkins install in amazon linux EC2
+sudo su -
+
+yum update -y
+
+yum install git -y
+
+wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
+
+rpm --import http://pkg.jenkins-ci.org/redhat-stable/jenkins-ci.org.key
+
+yum install jenkins -y
+
+service jenkins start
+
+ chkconfig jenkins on
+
+yum install tomcat8-webapps tomcat8-admin-webapps
+
+service tomcat8 start
+
+———————
+sudo su -
+yum update -y
+yum install wget -y
+
+  wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u112-b15/jdk-8u112-linux-x64.rpm
+
+rpm -Uvh jdk-8u112-linux-x64.rpm
+
+alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_112/jre/bin/java 20000
+ alternatives --install /usr/bin/jar jar /usr/java/jdk1.8.0_112/bin/jar 20000
+ alternatives --install /usr/bin/javac javac /usr/java/jdk1.8.0_112/bin/javac 20000
+ alternatives --install /usr/bin/javaws javaws /usr/java/jdk1.8.0_112/jre/bin/javaws 20000
+ alternatives --set java /usr/java/jdk1.8.0_112/jre/bin/java
+ alternatives --set javaws /usr/java/jdk1.8.0_112/jre/bin/javaws
+ alternatives --set javac /usr/java/jdk1.8.0_112/bin/javac
+ alternatives --set jar /usr/java/jdk1.8.0_112/bin/jar
+
+
+——tomcat
+cd /opt/
+
+wget http://ftp.itu.edu.tr/Mirror/Apache/tomcat/tomcat-8/v8.5.14/bin/apache-tomcat-8.5.14.tar.gz
+
+tar -xvf apache-tomcat-8.5.14.tar.gz
+
+cd /opt/apache-tomcat-8.5.14/bin
+
+./startup.sh 
+
+
+The default directory for Tomcat files will be in /opt/apache-tomcat-8.0.9, you can view the configuration files inside the conf folder, the main page that you seen above, when you open your website on the 8080 port is in /opt/apache-tomcat-8.5.14/webapps/ROOT/.
+
+By default you only able to access default Tomcat page, to access admin and other sections like Server Status, Manager App and Host Manager. You need to configure user accounts for admins and managers. To do so, you need to edit ‘tomcat-users.xml‘ file located under /opt/apache-tomcat-8.5.14/conf directory.
+
+vi /opt/apache-tomcat-8.5.14/conf/tomcat-users.xml 
+
+<role rolename="manager-gui"/>
+<user username=“manager” password=“manager” roles="manager-gui"/>
+<role rolename="admin-gui"/>
+<user username="admin" password="adm!n" roles="admin-gui"/>
+
+./shutdown.sh 
+./startup.sh
+
+remotely browse manager gui…some trick context.xml,manager.xml need to study
